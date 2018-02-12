@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        BUILD_ENV: "development"
+    command: [sh, -c, "yarn run build && yarn run start"]
+    env_file:
+      - ./.env
+    ports:
+      - 4000:4000
+    volumes:
+      - $HOME/.cache/yarn-offline-mirror:/home/node/.cache/yarn-offline-mirror
+      - web-yarn:/home/node/.cache/yarn
+      - .:/usr/local/src/reaction-app
+
+volumes:
+  web-yarn:

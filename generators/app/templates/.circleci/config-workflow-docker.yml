@@ -1,0 +1,152 @@
+# This CircleCI configuration uses workflows to fan-out to multiple jobs.  Jobs
+# are performed directly in the CircleCI environment. Not from a built Docker
+# image.
+version: 2
+
+# The following stanza defines a map named defaults with a variable that may be
+# inserted using the YAML merge (<<: *) key later in the file to save some
+# typing. See http://yaml.org/type/merge.html for details.
+defaults: &defaults
+  context: reaction
+  environment:
+    - DOCKER_NAMESPACE: "reaction/reaction-base"
+  working_directory: ~/reaction-app
+  docker:
+    - image: circleci/node:8-stretch
+
+jobs:
+  docker-build:
+    # Builds dependencies and caches them for use in all future steps.
+    # CircleCI cache restores look up a key as a prefix, not an exact match.
+    # Use epoch suffix to be able to write a latest cache for branches.
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Docker Build
+          command: |
+            docker build \
+              --build-arg BUILD_ENV=test \
+              -t $DOCKER_NAMESPACE:$CIRCLE_SHA1 .
+            mkdir -p docker-cache
+            docker save \
+              -o docker-cache/docker-image.tar \
+              $DOCKER_NAMESPACE:$CIRCLE_SHA1
+      - run:
+          name: Discover Docker Tags
+          command: |
+            .circleci/bin/docker-tags "$CIRCLE_SHA1" "$CIRCLE_BRANCH" \
+              > docker-cache/docker-tags.txt
+            cat docker-cache/docker-tags.txt
+      - run:
+          name: Save Test .env for Workspace Jobs
+          command: cp .env.example docker-cache/.env
+      - persist_to_workspace:
+          root: docker-cache
+          paths:
+            - docker-image.tar
+            - docker-tags.txt
+            - .env
+
+  docker-push:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: docker-cache
+      - run:
+          name: Load Docker Image
+          command: |
+            docker load < docker-cache/docker-image.tar
+      - run:
+          name: Tag Docker Image
+          command: |
+            cat docker-cache/docker-tags.txt \
+              | xargs -t -I % \
+                docker tag "$DOCKER_NAMESPACE:$CIRCLE_SHA1" "$DOCKER_NAMESPACE:%"
+      - run:
+          name: Docker Push
+          command: |
+            echo "Not yet."
+
+  lint:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: docker-cache
+      - run:
+          name: Load Docker Image
+          command: |
+            docker load < docker-cache/docker-image.tar
+      - run:
+          name: Lint
+          command: |
+            docker run \
+              --env-file docker-cache/.env \
+              --name reactionapp_web_1 \
+              "$DOCKER_NAMESPACE:$CIRCLE_SHA1" \
+              yarn run lint
+
+  test:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: docker-cache
+      - run:
+          name: Load Docker Image
+          command: |
+            docker load < docker-cache/docker-image.tar
+      - run:
+          name: Test
+          command: |
+            docker run \
+              --env-file docker-cache/.env \
+              --name reactionapp_web_1 \
+              "$DOCKER_NAMESPACE:$CIRCLE_SHA1" \
+              yarn run test
+      - run:
+          name: Copy test artifacts from Remote Docker
+          command: |
+            docker cp \
+              reactionapp_web_1:/usr/local/src/reaction-app/reports \
+              reports
+      - store_test_results:
+          path: reports/junit
+      - store_artifacts:
+          path: reports
+
+  release:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - run:
+          name: Release
+          command: |
+            echo "Not yet."
+
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - docker-build
+      - lint:
+          requires:
+            - docker-build
+      - test:
+          requires:
+            - docker-build
+      - docker-push:
+          requires:
+            - docker-build
+      - release-approval:
+          type: approval
+          requires:
+            - lint
+            - test
+      - release:
+          requires:
+            - release-approval

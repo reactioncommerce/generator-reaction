@@ -1,0 +1,108 @@
+# This CircleCI configuration uses workflows to fan-out to multiple jobs.  Jobs
+# are performed directly in the CircleCI environment. Not from a built Docker
+# image.
+version: 2
+
+# The following stanza defines a map named defaults with a variable that may be inserted using the YAML merge (<<: *) key 
+# later in the file to save some typing. See http://yaml.org/type/merge.html for details.
+defaults: &defaults
+  context: reaction
+  working_directory: ~/reaction-app
+  docker:
+    - image: circleci/node:8-stretch
+
+jobs:
+  build:
+    # Builds dependencies and caches them for use in all future steps.
+    # CircleCI cache restores look up a key as a prefix, not an exact match.
+    # Use epoch suffix to be able to write a latest cache for branches.
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-yarn-offline-mirror
+      - restore_cache:
+          # Fall back to less specific caches.
+          key: v1-yarn-cache-{{ checksum "yarn.lock" }}
+          key: v1-yarn-cache-{{ .Branch }}
+          key: v1-yarn-cache-master
+      - restore_cache:
+          # Fall back to less specific caches.
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v1-node-modules-{{ .Branch }}
+          key: v1-node-modules-master
+      - run:
+          name: Configure Yarn For CircleCI
+          command: cp .circleci/.yarnrc ./
+      - run:
+          name: Yarn Install
+          command: yarn install --frozen-lockfile
+      # Store the offline-mirror cache.
+      # This is a mirror of all dependency tarballs - not platform specific.
+      - save_cache:
+          key: v1-yarn-offline-mirror
+          paths:
+            - ~/.cache/yarn-offline-mirror
+      # Store Yarn caches.
+      # This is a cache of all dependencies. extracted, platform specific
+      - save_cache:
+          key: v1-yarn-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: v1-yarn-cache-{{ .Branch }}-{{ epoch }}
+          paths:
+            - ~/.cache/yarn
+      # Store node_modules dependency caches.
+      # The node_modules for this project.
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+      - save_cache:
+          key: v1-node-modules-{{ .Branch }}-{{ epoch }}
+          paths:
+            - node_modules
+
+  lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Configure Yarn for CircleCI
+          command: cp .circleci/.yarnrc ./
+      - run:
+          name: Lint
+          command: yarn run lint
+
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Configure Yarn for CircleCI
+          command: cp .circleci/.yarnrc ./
+      - run:
+          name: Test
+          command: yarn run test
+      - store_test_results:
+          path: reports/junit
+      - store_artifacts:
+          path: reports
+
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
+      - test:
+          requires:
+            - build
