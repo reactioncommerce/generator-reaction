@@ -9,6 +9,8 @@ services:
     command: [sh, -c, "yarn run build && yarn run start"]
     env_file:
       - ./.env
+    environment:
+      REACTION_APP_NAME: "<%= projectName %>-web"
     ports:
       - 4000:4000
     volumes:

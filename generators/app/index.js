@@ -69,12 +69,82 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    // package.json
+    // Package.json
     this.fs.copyTpl(
       this.templatePath("package.json"),
       this.destinationPath("package.json"),
       this.props
     );
+
+    // Project Files
+    this.fs.copyTpl(
+      this.templatePath("README.md"),
+      this.destinationPath("README.md"),
+      this.props
+    );
+
+    // Docker
+    this.fs.copy(
+      this.templatePath("Dockerfile"),
+      this.destinationPath("Dockerfile")
+    );
+
+    this.fs.copyTpl(
+      this.templatePath("docker-compose.yml"),
+      this.destinationPath("docker-compose.yml"),
+      this.props
+    );
+
+    this.fs.copy(
+      this.templatePath(".dockerignore"),
+      this.destinationPath(".dockerignore")
+    );
+
+    this.fs.copyTpl(
+      this.templatePath(".env.example"),
+      this.destinationPath(".env.example"),
+      this.props
+    );
+
+    this.fs.copy(this.templatePath("bin"), this.destinationPath("bin"));
+
+    // Git
+    this.fs.copyTpl(
+      this.templatePath(".gitignore"),
+      this.destinationPath(".gitignore"),
+      this.props
+    );
+
+    // Yarn
+    this.fs.copyTpl(
+      this.templatePath(".yarnrc"),
+      this.destinationPath(".yarnrc"),
+      this.props
+    );
+
+    // Project hygene
+    this.fs.copy(
+      this.templatePath("CODE_OF_CONDUCT.md"),
+      this.destinationPath("CODE_OF_CONDUCT.md")
+    );
+    this.fs.copy(
+      this.templatePath("LICENSE.md"),
+      this.destinationPath("LICENSE.md")
+    );
+
+    // Project Files
+
+    // reports
+    this.fs.copy(
+      this.templatePath(".circleci"),
+      this.destinationPath(".circleci")
+    );
+    this.fs.copy(
+      this.templatePath(".reaction"),
+      this.destinationPath(".reaction")
+    );
+    this.fs.copy(this.templatePath("bin"), this.destinationPath("bin"));
+    this.fs.copy(this.templatePath("reports"), this.destinationPath("reports"));
   }
 
   install() {

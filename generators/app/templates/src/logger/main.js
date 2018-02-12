@@ -2,7 +2,7 @@ import bunyan from "bunyan";
 import bunyanFormat from "bunyan-format";
 
 // set logging application name
-const appName = process.env.REACTION_APP_NAME || "Reaction";
+const appName = process.env.REACTION_APP_NAME || "<%= projectName %>";
 
 // set stdout log level
 let level = process.env.REACTION_LOG_LEVEL || "INFO";
