@@ -145,6 +145,10 @@ module.exports = class extends Generator {
       this.destinationPath(".circleci/config.yml")
     );
     this.fs.copy(
+      this.templatePath(".circleci/.yarnrc"),
+      this.destinationPath(".circleci/.yarnrc")
+    );
+    this.fs.copy(
       this.templatePath(".circleci/bin"),
       this.destinationPath(".circleci/bin")
     );
