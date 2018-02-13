@@ -53,6 +53,12 @@ module.exports = class extends Generator {
         message: "Keep NPM repository private?",
         name: "isNPMPrivate",
         type: "confirm"
+      },
+      {
+        default: false,
+        message: "Perform a full Yarn install? (Will take much longer.)",
+        name: "isFullYarnInstallEnabled",
+        type: "confirm"
       }
     ];
 
@@ -108,6 +114,22 @@ module.exports = class extends Generator {
       this.props
     );
 
+    // Yarn
+    if (!this.props.isFullYarnInstallEnabled) {
+      this.fs.copyTpl(
+        this.templatePath("yarn.lock"),
+        this.destinationPath("yarn.lock"),
+        this.props
+      );
+      this.fs.copyTpl(
+        this.templatePath(".yarnrc"),
+        this.destinationPath(".yarnrc"),
+        this.props
+      );
+    } else {
+      // Modify package.json?
+    }
+
     // Project Files
     this.fs.copyTpl(
       this.templatePath(".circleci/config-workflow-docker.yml"),
@@ -141,31 +163,33 @@ module.exports = class extends Generator {
   }
 
   install() {
-    // Dependencies
-    this.yarnInstall(["bunyan"], { dev: true });
-    this.yarnInstall(["bunyan-format"], { dev: true });
-    this.yarnInstall(["graphql-yoga"], { dev: true });
+    if (this.props.isFullYarnInstallEnabled) {
+      // Dependencies
+      this.yarnInstall(["bunyan"], { dev: true });
+      this.yarnInstall(["bunyan-format"], { dev: true });
+      this.yarnInstall(["graphql-yoga"], { dev: true });
 
-    // Dev dependencies
-    this.yarnInstall(["@reactioncommerce/eslint-config"], { dev: true });
-    this.yarnInstall(["babel-cli"], { dev: true });
-    this.yarnInstall(["babel-eslint"], { dev: true });
-    this.yarnInstall(["babel-preset-env"], { dev: true });
-    this.yarnInstall(["babel-preset-stage-2"], { dev: true });
-    this.yarnInstall(["eslint"], { dev: true });
-    this.yarnInstall(["eslint-config-prettier"], { dev: true });
-    this.yarnInstall(["eslint-plugin-babel"], { dev: true });
-    this.yarnInstall(["eslint-plugin-import"], { dev: true });
-    this.yarnInstall(["eslint-plugin-jest"], { dev: true });
-    this.yarnInstall(["eslint-plugin-jsx-a11y"], { dev: true });
-    this.yarnInstall(["eslint-plugin-prettier"], { dev: true });
-    this.yarnInstall(["eslint-plugin-react"], { dev: true });
-    this.yarnInstall(["jest"], { dev: true });
-    this.yarnInstall(["jest-junit"], { dev: true });
-    this.yarnInstall(["nodemon"], { dev: true });
-    this.yarnInstall(["prettier@1.10.2"], { dev: true, exact: true });
-    this.yarnInstall(["prettier-check"], { dev: true });
-    this.yarnInstall(["rimraf"], { dev: true });
+      // Dev dependencies
+      this.yarnInstall(["@reactioncommerce/eslint-config"], { dev: true });
+      this.yarnInstall(["babel-cli"], { dev: true });
+      this.yarnInstall(["babel-eslint"], { dev: true });
+      this.yarnInstall(["babel-preset-env"], { dev: true });
+      this.yarnInstall(["babel-preset-stage-2"], { dev: true });
+      this.yarnInstall(["eslint"], { dev: true });
+      this.yarnInstall(["eslint-config-prettier"], { dev: true });
+      this.yarnInstall(["eslint-plugin-babel"], { dev: true });
+      this.yarnInstall(["eslint-plugin-import"], { dev: true });
+      this.yarnInstall(["eslint-plugin-jest"], { dev: true });
+      this.yarnInstall(["eslint-plugin-jsx-a11y"], { dev: true });
+      this.yarnInstall(["eslint-plugin-prettier"], { dev: true });
+      this.yarnInstall(["eslint-plugin-react"], { dev: true });
+      this.yarnInstall(["jest"], { dev: true });
+      this.yarnInstall(["jest-junit"], { dev: true });
+      this.yarnInstall(["nodemon"], { dev: true });
+      this.yarnInstall(["prettier@1.10.2"], { dev: true, exact: true });
+      this.yarnInstall(["prettier-check"], { dev: true });
+      this.yarnInstall(["rimraf"], { dev: true });
+    }
 
     this.log("\nCreating .env from .env.example");
     this.spawnCommand("./bin/setup", { stdio: "ignore" });
@@ -173,10 +197,15 @@ module.exports = class extends Generator {
   }
 
   end() {
-    this.fs.copy(this.templatePath(".yarnrc"), this.destinationPath(".yarnrc"));
+    if (this.props.isFullYarnInstallEnabled) {
+      this.fs.copy(
+        this.templatePath(".yarnrc"),
+        this.destinationPath(".yarnrc")
+      );
 
-    this.log("Removing node modules. Use Docker Compose from here on out.");
-    this.fs.delete(this.destinationPath("node_modules"));
+      this.log("Removing node modules. Use Docker Compose from here on out.");
+      this.fs.delete(this.destinationPath("node_modules"));
+    }
 
     this.log(chalk.bold.green("\nGenerator setup finished."));
     this.log("If you see no errors above, run the server with Docker Compose:");

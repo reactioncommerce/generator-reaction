@@ -50,7 +50,7 @@
   "jest-junit": {
     "output": "reports/junit/junit.xml",
     "suiteName": "jest-tests"
-  },
+  }<% if (!isFullYarnInstallEnabled) { %>,
   "dependencies": {
     "bunyan": "^1.8.12",
     "bunyan-format": "^0.2.1",
@@ -76,5 +76,5 @@
     "prettier": "1.10.2",
     "prettier-check": "^2.0.0",
     "rimraf": "^2.6.2"
-  }
+  }<% } %>
 }
