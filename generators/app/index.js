@@ -57,7 +57,6 @@ module.exports = class extends Generator {
     ];
 
     return this.prompt(prompts).then(props => {
-      // To access props later use this.props.someAnswer;
       this.props = props;
     });
   }
@@ -140,10 +139,6 @@ module.exports = class extends Generator {
       this.props
     );
     this.fs.copy(
-      this.templatePath(".circleci/.yarnrc"),
-      this.destinationPath(".circleci/.yarnrc")
-    );
-    this.fs.copy(
       this.templatePath(".circleci/bin"),
       this.destinationPath(".circleci/bin")
     );
@@ -164,11 +159,15 @@ module.exports = class extends Generator {
 
   install() {
     // We'll not install dependencies because this should be via Docker build.
+
+    this.log("\nCreating .env from .env.example");
+    this.spawnCommand("./bin/setup", { stdio: "ignore" });
+    this.log(chalk.bold.green("Created .env"));
   }
 
   end() {
     this.log(chalk.bold.green("\nGenerator setup finished."));
     this.log("If you see no errors above, run the server with Docker Compose:");
-    this.log(chalk.bold.white("docker-compose up"));
+    this.log(chalk.bold.white("docker-compose up\n"));
   }
 };
