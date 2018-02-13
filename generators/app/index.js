@@ -116,6 +116,12 @@ module.exports = class extends Generator {
     );
 
     // Yarn
+    // Copy Yarn.lock to support the initial Docker build.
+    this.fs.copyTpl(
+      this.templatePath("yarn.lock"),
+      this.destinationPath("yarn.lock"),
+      this.props
+    );
     this.fs.copyTpl(
       this.templatePath(".yarnrc"),
       this.destinationPath(".yarnrc"),
@@ -134,7 +140,6 @@ module.exports = class extends Generator {
 
     // Project Files
 
-    // reports
     this.fs.copy(
       this.templatePath(".circleci"),
       this.destinationPath(".circleci")
@@ -145,6 +150,13 @@ module.exports = class extends Generator {
     );
     this.fs.copy(this.templatePath("bin"), this.destinationPath("bin"));
     this.fs.copy(this.templatePath("reports"), this.destinationPath("reports"));
+
+    this.fs.copyTpl(
+      this.templatePath("src"),
+      this.destinationPath("src"),
+      this.props
+    );
+    this.fs.copy(this.templatePath("test"), this.destinationPath("test"));
   }
 
   install() {

@@ -10,7 +10,7 @@
     "email": "<%= projectAuthorEmail %>",
     "url": "https://reactioncommerce.com"
   },
-  "license": "GPLv3",
+  "license": "GPL-3.0-only",
   "private": <%= isNPMPrivate %>,
   "scripts": {
     "clean": "rimraf dist",
