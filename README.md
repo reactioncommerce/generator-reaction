@@ -10,10 +10,12 @@ npm install -g yo
 npm install -g generator-reaction-next
 ```
 
-Then generate your new project:
+## Generate a new project
 
 ```bash
-yo reaction-next
+mkdir project-name
+cd project-name
+yo project-name
 ```
 
 ## Getting To Know Yeoman
