@@ -53,12 +53,6 @@ module.exports = class extends Generator {
         message: "Keep NPM repository private?",
         name: "isNPMPrivate",
         type: "confirm"
-      },
-      {
-        default: true,
-        message: "Enable GraphQL?",
-        name: "includeGraphQL",
-        type: "confirm"
       }
     ];
 
