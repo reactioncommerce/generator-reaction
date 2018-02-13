@@ -34,11 +34,12 @@
   "eslintConfig": {
     "extends": "@reactioncommerce"
   },
+  "eslintIgnore": ["dist", "reports"],
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [
       "**/*.{js,jsx}",
-      "!**/coverage/**",
+      "!**/reports/**",
       "!**/dist/**",
       "!**/node_modules/**",
       "!**/vendor/**"
