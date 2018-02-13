@@ -1,6 +1,5 @@
-# This CircleCI configuration uses workflows to fan-out to multiple jobs.  Jobs
-# are performed directly in the CircleCI environment. Not from a built Docker
-# image.
+# This CircleCI configuration uses workflows to fan-out to multiple jobs.
+# The first job builds the Docker image which is used in all future steps.
 version: 2
 
 # The following stanza defines a map named defaults with a variable that may be
@@ -9,16 +8,13 @@ version: 2
 defaults: &defaults
   context: reaction
   environment:
-    - DOCKER_NAMESPACE: "reaction/reaction-base"
+    - DOCKER_NAMESPACE: "reaction/<%= projectName %>"
   working_directory: ~/reaction-app
   docker:
     - image: circleci/node:8-stretch
 
 jobs:
   docker-build:
-    # Builds dependencies and caches them for use in all future steps.
-    # CircleCI cache restores look up a key as a prefix, not an exact match.
-    # Use epoch suffix to be able to write a latest cache for branches.
     <<: *defaults
     steps:
       - checkout
@@ -118,16 +114,6 @@ jobs:
       - store_artifacts:
           path: reports
 
-  release:
-    <<: *defaults
-    steps:
-      - setup_remote_docker
-      - run:
-          name: Release
-          command: |
-            echo "Not yet."
-
-
 workflows:
   version: 2
   build_and_test:
@@ -142,11 +128,3 @@ workflows:
       - docker-push:
           requires:
             - docker-build
-      - release-approval:
-          type: approval
-          requires:
-            - lint
-            - test
-      - release:
-          requires:
-            - release-approval
