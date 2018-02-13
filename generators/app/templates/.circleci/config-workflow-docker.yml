@@ -8,7 +8,7 @@ version: 2
 defaults: &defaults
   context: reaction
   environment:
-    - DOCKER_NAMESPACE: "reaction/<%= projectName %>"
+    - DOCKER_NAMESPACE: "reactioncommerce/<%= projectName %>"
   working_directory: ~/reaction-app
   docker:
     - image: circleci/node:8-stretch
