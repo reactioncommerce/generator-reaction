@@ -60,11 +60,18 @@ jobs:
           command: |
             cat docker-cache/docker-tags.txt \
               | xargs -t -I % \
-                docker tag "$DOCKER_NAMESPACE:$CIRCLE_SHA1" "$DOCKER_NAMESPACE:%"
+                docker tag \
+                  "$DOCKER_NAMESPACE:$CIRCLE_SHA1" \
+                  "$DOCKER_NAMESPACE:%"
       - run:
           name: Docker Push
           command: |
-            echo "Not yet."
+            docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
+            docker push "${DOCKER_NAMESPACE}:${SHA1}"
+            cat docker-cache/docker-tags.txt \
+              | xargs -t -I % \
+                docker push "$DOCKER_NAMESPACE:%"
+
 
   lint:
     <<: *defaults
