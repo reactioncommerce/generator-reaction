@@ -141,8 +141,12 @@ module.exports = class extends Generator {
     // Project Files
 
     this.fs.copy(
-      this.templatePath(".circleci"),
-      this.destinationPath(".circleci")
+      this.templatePath(".circleci/config-workflow-docker.yml"),
+      this.destinationPath(".circleci/config.yml")
+    );
+    this.fs.copy(
+      this.templatePath(".circleci/bin"),
+      this.destinationPath(".circleci/bin")
     );
     this.fs.copy(
       this.templatePath(".reaction"),
