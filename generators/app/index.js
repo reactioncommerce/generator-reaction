@@ -53,12 +53,6 @@ module.exports = class extends Generator {
         message: "Keep NPM repository private?",
         name: "isNPMPrivate",
         type: "confirm"
-      },
-      {
-        default: false,
-        message: "Perform a full Yarn install? (Will take much longer.)",
-        name: "isFullYarnInstallEnabled",
-        type: "confirm"
       }
     ];
 
@@ -114,22 +108,6 @@ module.exports = class extends Generator {
       this.props
     );
 
-    // Yarn
-    if (!this.props.isFullYarnInstallEnabled) {
-      this.fs.copyTpl(
-        this.templatePath("yarn.lock"),
-        this.destinationPath("yarn.lock"),
-        this.props
-      );
-      this.fs.copyTpl(
-        this.templatePath(".yarnrc"),
-        this.destinationPath(".yarnrc"),
-        this.props
-      );
-    } else {
-      // Modify package.json?
-    }
-
     // Project Files
     this.fs.copyTpl(
       this.templatePath(".circleci/config-workflow-docker.yml"),
@@ -163,36 +141,38 @@ module.exports = class extends Generator {
   }
 
   install() {
-    if (this.props.isFullYarnInstallEnabled) {
-      // Dependencies
-      this.yarnInstall(["bunyan", "bunyan-format", "graphql-yoga"]);
+    // Dependencies
+    this.yarnInstall([
+      "bunyan@^1.8.12",
+      "bunyan-format@^0.2.1",
+      "graphql-yoga@^1.3.2"
+    ]);
 
-      // Dev dependencies
-      this.yarnInstall(
-        [
-          "@reactioncommerce/eslint-config",
-          "babel-cli",
-          "babel-eslint",
-          "babel-preset-env",
-          "babel-preset-stage-2",
-          "eslint",
-          "eslint-config-prettier",
-          "eslint-plugin-babel",
-          "eslint-plugin-import",
-          "eslint-plugin-jest",
-          "eslint-plugin-jsx-a11y",
-          "eslint-plugin-prettier",
-          "eslint-plugin-react",
-          "jest",
-          "jest-junit",
-          "nodemon",
-          "prettier@1.10.2",
-          "prettier-check",
-          "rimraf"
-        ],
-        { dev: true }
-      );
-    }
+    // Dev dependencies
+    this.yarnInstall(
+      [
+        "@reactioncommerce/eslint-config@^1.0.1",
+        "babel-cli@^6.26.0",
+        "babel-eslint@8.2.1",
+        "babel-preset-env@^1.6.1",
+        "babel-preset-stage-2@6.24.1",
+        "eslint@^4.17.0",
+        "eslint-config-prettier@^2.9.0",
+        "eslint-plugin-babel@^4.1.2",
+        "eslint-plugin-import@^2.8.0",
+        "eslint-plugin-jest@^21.12.1",
+        "eslint-plugin-jsx-a11y@^6.0.3",
+        "eslint-plugin-prettier@^2.6.0",
+        "eslint-plugin-react@^7.6.1",
+        "jest@^22.3.0",
+        "jest-junit@3.6.0",
+        "nodemon^1.14.12",
+        "prettier@1.10.2",
+        "prettier-check@^2.0.0",
+        "rimraf@^2.6.2"
+      ],
+      { dev: true }
+    );
 
     this.log("\nCreating .env from .env.example");
     this.spawnCommand("./bin/setup", { stdio: "ignore" });
@@ -200,23 +180,18 @@ module.exports = class extends Generator {
   }
 
   end() {
-    if (this.props.isFullYarnInstallEnabled) {
-      this.fs.copy(
-        this.templatePath(".yarnrc"),
-        this.destinationPath(".yarnrc")
-      );
+    this.fs.copy(this.templatePath(".yarnrc"), this.destinationPath(".yarnrc"));
 
-      this.log(chalk.bold.yellow("IMPORTANT:"));
-      this.log(
-        "Choose 'y' to overwrite node_modules when prompted. " +
-          "This will simply delete the node_modules directory that was " +
-          "created during the installation . We'll rebuild the dependencies " +
-          "via a Docker build to run the project.\n" +
-          "The project may not run properly if you don't choose 'y'."
-      );
-      this.log("\nUse Docker Compose from here on out.");
-      this.fs.delete(this.destinationPath("node_modules"));
-    }
+    this.log(chalk.bold.yellow("IMPORTANT:"));
+    this.log(
+      "Choose 'y' to overwrite node_modules when prompted. " +
+        "This will simply delete the node_modules directory that was " +
+        "created during the installation . We'll rebuild the dependencies " +
+        "via a Docker build to run the project.\n" +
+        "The project may not run properly if you don't choose 'y'."
+    );
+    this.log("\nUse Docker Compose from here on out.");
+    this.fs.delete(this.destinationPath("node_modules"));
 
     this.log(chalk.bold.green("\nGenerator setup finished."));
     this.log("If you see no errors above, run the server with Docker Compose:");
