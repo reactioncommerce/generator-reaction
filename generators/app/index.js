@@ -165,30 +165,33 @@ module.exports = class extends Generator {
   install() {
     if (this.props.isFullYarnInstallEnabled) {
       // Dependencies
-      this.yarnInstall(["bunyan"], { dev: true });
-      this.yarnInstall(["bunyan-format"], { dev: true });
-      this.yarnInstall(["graphql-yoga"], { dev: true });
+      this.yarnInstall(["bunyan", "bunyan-format", "graphql-yoga"]);
 
       // Dev dependencies
-      this.yarnInstall(["@reactioncommerce/eslint-config"], { dev: true });
-      this.yarnInstall(["babel-cli"], { dev: true });
-      this.yarnInstall(["babel-eslint"], { dev: true });
-      this.yarnInstall(["babel-preset-env"], { dev: true });
-      this.yarnInstall(["babel-preset-stage-2"], { dev: true });
-      this.yarnInstall(["eslint"], { dev: true });
-      this.yarnInstall(["eslint-config-prettier"], { dev: true });
-      this.yarnInstall(["eslint-plugin-babel"], { dev: true });
-      this.yarnInstall(["eslint-plugin-import"], { dev: true });
-      this.yarnInstall(["eslint-plugin-jest"], { dev: true });
-      this.yarnInstall(["eslint-plugin-jsx-a11y"], { dev: true });
-      this.yarnInstall(["eslint-plugin-prettier"], { dev: true });
-      this.yarnInstall(["eslint-plugin-react"], { dev: true });
-      this.yarnInstall(["jest"], { dev: true });
-      this.yarnInstall(["jest-junit"], { dev: true });
-      this.yarnInstall(["nodemon"], { dev: true });
-      this.yarnInstall(["prettier@1.10.2"], { dev: true, exact: true });
-      this.yarnInstall(["prettier-check"], { dev: true });
-      this.yarnInstall(["rimraf"], { dev: true });
+      this.yarnInstall(
+        [
+          "@reactioncommerce/eslint-config",
+          "babel-cli",
+          "babel-eslint",
+          "babel-preset-env",
+          "babel-preset-stage-2",
+          "eslint",
+          "eslint-config-prettier",
+          "eslint-plugin-babel",
+          "eslint-plugin-import",
+          "eslint-plugin-jest",
+          "eslint-plugin-jsx-a11y",
+          "eslint-plugin-prettier",
+          "eslint-plugin-react",
+          "jest",
+          "jest-junit",
+          "nodemon",
+          "prettier@1.10.2",
+          "prettier-check",
+          "rimraf"
+        ],
+        { dev: true }
+      );
     }
 
     this.log("\nCreating .env from .env.example");
