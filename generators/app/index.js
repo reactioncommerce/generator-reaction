@@ -206,7 +206,15 @@ module.exports = class extends Generator {
         this.destinationPath(".yarnrc")
       );
 
-      this.log("Removing node modules. Use Docker Compose from here on out.");
+      this.log(chalk.bold.yellow("IMPORTANT:"));
+      this.log(
+        "Choose 'y' to overwrite node_modules when prompted. " +
+          "This will simply delete the node_modules directory that was " +
+          "created during the installation . We'll rebuild the dependencies " +
+          "via a Docker build to run the project.\n" +
+          "The project may not run properly if you don't choose 'y'."
+      );
+      this.log("\nUse Docker Compose from here on out.");
       this.fs.delete(this.destinationPath("node_modules"));
     }
 
