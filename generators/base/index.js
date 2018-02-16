@@ -5,22 +5,7 @@ const yosay = require("yosay");
 
 module.exports = class extends Generator {
   prompting() {
-    // Have Yeoman greet the user.
-    this.log(
-      yosay(
-        "Welcome to the excellent " +
-          chalk.red("generator-reaction-next") +
-          " generator!"
-      )
-    );
-
     const prompts = [
-      {
-        default: "reaction-demo",
-        message: "Your project name.",
-        name: "projectName",
-        type: "input"
-      },
       {
         default: "0.1.0",
         message: "Version",
@@ -62,18 +47,19 @@ module.exports = class extends Generator {
   }
 
   writing() {
+    const opts = Object.assign({}, this.options, this.props);
     // Package.json
     this.fs.copyTpl(
       this.templatePath("package.json"),
       this.destinationPath("package.json"),
-      this.props
+      opts
     );
 
     // Project Files
     this.fs.copyTpl(
       this.templatePath("README.md"),
       this.destinationPath("README.md"),
-      this.props
+      opts
     );
 
     // Docker
@@ -85,7 +71,7 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("docker-compose.yml"),
       this.destinationPath("docker-compose.yml"),
-      this.props
+      opts
     );
 
     this.fs.copy(
@@ -96,7 +82,7 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath(".env.example"),
       this.destinationPath(".env.example"),
-      this.props
+      opts
     );
 
     this.fs.copy(this.templatePath("bin"), this.destinationPath("bin"));
@@ -105,19 +91,10 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath(".gitignore"),
       this.destinationPath(".gitignore"),
-      this.props
+      opts
     );
 
     // Project Files
-    this.fs.copyTpl(
-      this.templatePath(".circleci/config-workflow-docker.yml"),
-      this.destinationPath(".circleci/config.yml"),
-      this.props
-    );
-    this.fs.copy(
-      this.templatePath(".circleci/bin"),
-      this.destinationPath(".circleci/bin")
-    );
     this.fs.copy(
       this.templatePath(".reaction"),
       this.destinationPath(".reaction")
@@ -127,7 +104,7 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("src"),
       this.destinationPath("src"),
-      this.props
+      opts
     );
     this.fs.copy(this.templatePath("test"), this.destinationPath("test"));
     this.fs.copy(

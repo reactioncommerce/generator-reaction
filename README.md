@@ -15,7 +15,7 @@ npm install -g generator-reaction-next
 ```bash
 mkdir project-name
 cd project-name
-yo project-name
+yo reaction-next project-name
 ```
 
 ## Getting To Know Yeoman
