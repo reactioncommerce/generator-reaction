@@ -4,3 +4,10 @@ TODO: Add great documentation.
 
 Information around the architectural decisions made for this project should be
 added to the [architecture/decisions](./architecture/decisions) directory.
+
+The NPM package [adr-tools](https://github.com/npryce/adr-tools) is installed
+with this project and can be used to add new decisions.
+
+```sh
+docker-compose run --rm web adr new "Implement the Torpedos"
+```
