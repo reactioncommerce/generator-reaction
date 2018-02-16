@@ -105,7 +105,12 @@ module.exports = class extends Generator {
 
   install() {
     // Dependencies
-    this.yarnInstall(['bunyan@^1.8.12', 'bunyan-format@^0.2.1', 'graphql-yoga@^1.3.2']);
+    this.yarnInstall([
+      'bunyan@^1.8.12',
+      'bunyan-format@^0.2.1',
+      'envalid@^4.1.2',
+      'graphql-yoga@^1.3.2'
+    ]);
 
     // Dev dependencies
     this.yarnInstall(
