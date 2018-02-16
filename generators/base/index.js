@@ -22,15 +22,15 @@ module.exports = class extends Generator {
         type: 'input'
       },
       {
+        default: 'Reaction Commerce',
         message: 'Author',
         name: 'projectAuthor',
-        store: true,
         type: 'input'
       },
       {
+        default: 'engineering@reactioncommerce.com',
         message: 'Author Email',
         name: 'projectAuthorEmail',
-        store: true,
         type: 'input'
       },
       {
