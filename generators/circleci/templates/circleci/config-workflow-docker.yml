@@ -6,7 +6,6 @@ version: 2
 # inserted using the YAML merge (<<: *) key later in the file to save some
 # typing. See http://yaml.org/type/merge.html for details.
 defaults: &defaults
-  context: reaction
   environment:
     - DOCKER_NAMESPACE: "<%= dockerRepository %>"
   working_directory: ~/reaction-app
@@ -125,13 +124,17 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - docker-build
+      - docker-build:
+          context: reaction-build-read
       - lint:
+          context: reaction-validation
           requires:
             - docker-build
       - test:
+          context: reaction-validation
           requires:
             - docker-build
       - docker-push:
+          context: reaction-publish-docker
           requires:
             - docker-build
