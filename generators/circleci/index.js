@@ -1,5 +1,5 @@
-"use strict";
-const Generator = require("yeoman-generator");
+'use strict';
+const Generator = require('yeoman-generator');
 
 module.exports = class extends Generator {
   prompting() {
@@ -10,9 +10,9 @@ module.exports = class extends Generator {
     const prompts = [
       {
         default: defaultDockerRepository,
-        message: "Docker repository.",
-        name: "dockerRepository",
-        type: "input"
+        message: 'Docker repository.',
+        name: 'dockerRepository',
+        type: 'input'
       }
     ];
 
@@ -20,17 +20,19 @@ module.exports = class extends Generator {
       this.props = props;
     });
   }
+
   writing() {
-    const opts = this.props;
+    const [dockerNamespace, dockerName] = this.props.dockerRepository.split('/');
+    const opts = Object.assign(this.props, { dockerNamespace, dockerName });
 
     this.fs.copyTpl(
-      this.templatePath("circleci/config-workflow-docker.yml"),
-      this.destinationPath(".circleci/config.yml"),
+      this.templatePath('circleci/config-workflow-docker.yml'),
+      this.destinationPath('.circleci/config.yml'),
       opts
     );
     this.fs.copy(
-      this.templatePath("circleci/bin"),
-      this.destinationPath(".circleci/bin")
+      this.templatePath('circleci/bin'),
+      this.destinationPath('.circleci/bin')
     );
   }
 };

@@ -1,5 +1,8 @@
-# This CircleCI configuration uses workflows to fan-out to multiple jobs.
-# The first job builds the Docker image which is used in all future steps.
+# This CircleCI configuration uses workflows to fan-out to multiple jobs.  The
+# workflow is Dockerized. The first job builds the Docker image which is used
+# in all future steps.
+#
+#  Assumes that the Docker image is published to Docker Hub.
 version: 2
 
 # The following stanza defines a map named defaults with a variable that may be
@@ -7,8 +10,10 @@ version: 2
 # typing. See http://yaml.org/type/merge.html for details.
 defaults: &defaults
   environment:
-    - DOCKER_NAMESPACE: "<%= dockerRepository %>"
-  working_directory: ~/reaction-app
+    - DOCKER_REPOSITORY: "<%= dockerRepository %>"
+    - DOCKER_NAMESPACE: "<%= dockerNamespace %>"
+    - DOCKER_NAME: "<%= dockerName %>"
+
   docker:
     - image: circleci/node:8-stretch
 
@@ -45,7 +50,7 @@ jobs:
             mkdir -p docker-cache
             docker save \
               -o docker-cache/docker-image.tar \
-              "$DOCKER_NAMESPACE:$CIRCLE_SHA1"
+              "$DOCKER_REPOSITORY:$CIRCLE_SHA1"
       - run:
           name: Discover Docker Tags
           command: |
@@ -78,16 +83,16 @@ jobs:
             cat docker-cache/docker-tags.txt \
               | xargs -t -I % \
                 docker tag \
-                  "$DOCKER_NAMESPACE:$CIRCLE_SHA1" \
-                  "$DOCKER_NAMESPACE:%"
+                  "$DOCKER_REPOSITORY:$CIRCLE_SHA1" \
+                  "$DOCKER_REPOSITORY:%"
       - run:
           name: Docker Push
           command: |
             docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-            docker push "$DOCKER_NAMESPACE:$CIRCLE_SHA1"
+            docker push "$DOCKER_REPOSITORY:$CIRCLE_SHA1"
             cat docker-cache/docker-tags.txt \
               | xargs -t -I % \
-                docker push "$DOCKER_NAMESPACE:%"
+                docker push "$DOCKER_REPOSITORY:%"
 
 
   lint:
@@ -106,7 +111,7 @@ jobs:
             docker run \
               --env-file docker-cache/.env \
               --name reactionapp_web_1 \
-              "$DOCKER_NAMESPACE:$CIRCLE_SHA1" \
+              "$DOCKER_REPOSITORY:$CIRCLE_SHA1" \
               yarn run lint
 
   test:
@@ -125,7 +130,7 @@ jobs:
             docker run \
               --env-file docker-cache/.env \
               --name reactionapp_web_1 \
-              "$DOCKER_NAMESPACE:$CIRCLE_SHA1" \
+              "$DOCKER_REPOSITORY:$CIRCLE_SHA1" \
               yarn run test
       - run:
           name: Copy test artifacts from Remote Docker
