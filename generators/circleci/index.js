@@ -13,6 +13,11 @@ module.exports = class extends Generator {
         message: 'Docker repository.',
         name: 'dockerRepository',
         type: 'input'
+      },
+      {
+        message: 'Is Docker repo private?',
+        name: 'isDockerPrivate',
+        type: 'confirm'
       }
     ];
 
