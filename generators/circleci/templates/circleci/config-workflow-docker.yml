@@ -24,6 +24,13 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: Discover Docker Tags
+          command: |
+            mkdir -p docker-cache
+            .circleci/bin/docker-tags "$CIRCLE_SHA1" "$CIRCLE_BRANCH" \
+              > docker-cache/docker-tags.txt
+            cat docker-cache/docker-tags.txt
+      - run:
           name: Docker Build
           command: |
             docker build \
@@ -51,12 +58,6 @@ jobs:
             docker save \
               -o docker-cache/docker-image.tar \
               "$DOCKER_REPOSITORY:$CIRCLE_SHA1"
-      - run:
-          name: Discover Docker Tags
-          command: |
-            .circleci/bin/docker-tags "$CIRCLE_SHA1" "$CIRCLE_BRANCH" \
-              > docker-cache/docker-tags.txt
-            cat docker-cache/docker-tags.txt
       - run:
           name: Save Test .env for Workspace Jobs
           command: cp .env.example docker-cache/.env
