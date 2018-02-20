@@ -133,7 +133,8 @@ module.exports = class extends Generator {
         'nodemon@^1.14.12',
         'prettier@1.10.2',
         'prettier-check@^2.0.0',
-        'rimraf@^2.6.2'
+        'rimraf@^2.6.2',
+        'snyk@^1.69'
       ],
       { dev: true }
     );
