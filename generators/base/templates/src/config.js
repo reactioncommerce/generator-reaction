@@ -1,4 +1,4 @@
-import { email, json, port, str, cleanEnv } from "envalid";
+import { cleanEnv, port, str } from "envalid";
 
 // Define the ENV vars for the application.
 const schema = {
@@ -7,7 +7,7 @@ const schema = {
     example: "4000"
   }),
   REACTION_APP_NAME: str({
-    desc: "The application that will be added to logs.",
+    desc: "The application that will be added to logs."
   }),
   REACTION_LOG_LEVEL: str({
     desc: "The log level.",

@@ -25,5 +25,5 @@ const serverOptions = {
 
 const server = new GraphQLServer({ typeDefs, resolvers });
 server.start(serverOptions, () =>
-  logger.info(`Server is running on port ${port}`)
+  logger.info({ port }, `Server started on port ${port}.`)
 );

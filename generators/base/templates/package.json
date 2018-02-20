@@ -32,7 +32,10 @@
     ]
   },
   "eslintConfig": {
-    "extends": "@reactioncommerce"
+    "extends": [
+      "@reactioncommerce",
+      "prettier"
+    ]
   },
   "eslintIgnore": ["dist", "reports"],
   "jest": {
