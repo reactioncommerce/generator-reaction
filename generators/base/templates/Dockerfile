@@ -1,5 +1,4 @@
 FROM node:8-alpine
-MAINTAINER Ticean Bennett <ticean@reactioncommerce.com>
 
 ARG NAME=<%= projectName %>
 ARG DESCRIPTION="<%= projectDescription %>"
