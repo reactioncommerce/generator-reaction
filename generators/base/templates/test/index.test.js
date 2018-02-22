@@ -1,5 +1,3 @@
-describe("a guaranteed test", () => {
-  it("should pass", () => {
-    expect(true).toBe(true);
-  });
+test("a guaranteed test should pass", () => {
+  expect(true).toBe(true);
 });
