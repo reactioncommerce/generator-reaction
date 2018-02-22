@@ -1,11 +1,10 @@
 FROM node:8-alpine
-MAINTAINER Ticean Bennett <ticean@reactioncommerce.com>
 
-ARG NAME=reaction-graphql-gateway
-ARG DESCRIPTION="Reaction NEXT GraphQL API gateway."
-ARG URL=https://github.com/reactioncommerce/reaction-graphql-gateway
-ARG DOC_URL=https://github.com/reactioncommerce/reaction-graphql-gateway
-ARG VCS_URL=https://github.com/reactioncommerce/reaction-graphql-gateway
+ARG NAME=<%= projectName %>
+ARG DESCRIPTION="<%= projectDescription %>"
+ARG URL=https://github.com/reactioncommerce/<%= projectName %>
+ARG DOC_URL=https://github.com/reactioncommerce/<%= projectName %>
+ARG VCS_URL=https://github.com/reactioncommerce/<%= projectName %>
 ARG VCS_REF
 ARG VENDOR
 ARG BUILD_DATE
