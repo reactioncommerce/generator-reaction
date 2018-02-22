@@ -10,6 +10,15 @@ npm install -g yo
 npm install -g generator-reaction-next
 ```
 
+#### NPM Link
+
+This generator is not yet published to NPM. You will need to run `npm link` to
+make the template available.
+
+```bash
+npm link
+```
+
 ## Generate a new project
 
 ```bash
