@@ -139,6 +139,18 @@ jobs:
               "$DOCKER_REPOSITORY:$CIRCLE_SHA1" \
               yarn run lint
 
+  dockerfile-lint:
+    <<: *defaults
+    docker:
+      - image: hadolint/hadolint
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Dockerfile Lint
+          command: |
+            hadolint Dockerfile
+
   test:
     <<: *defaults
     steps:
