@@ -4,7 +4,6 @@
 
 [![CircleCI](https://circleci.com/gh/reactioncommerce/<%= projectName %>.svg?style=svg)](https://circleci.com/gh/reactioncommerce/<%= projectName %>)
 
-
 ## Getting Started
 
 ```sh

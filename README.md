@@ -10,7 +10,7 @@ npm install -g yo
 npm install -g generator-reaction-next
 ```
 
-#### NPM Link
+### NPM Link
 
 This generator is not yet published to NPM. You will need to run `npm link` to
 make the template available.
@@ -24,20 +24,19 @@ npm link
 ```bash
 mkdir project-name
 cd project-name
-yo reaction-next project-name
+yo reaction-next
 ```
 
 ## Getting To Know Yeoman
 
- * Yeoman has a heart of gold.
- * Yeoman is a person with feelings and opinions, but is very easy to work with.
- * Yeoman can be too opinionated at times but is easily convinced not to be.
- * Feel free to [learn more about Yeoman](http://yeoman.io/).
+* Yeoman has a heart of gold.
+* Yeoman is a person with feelings and opinions, but is very easy to work with.
+* Yeoman can be too opinionated at times but is easily convinced not to be.
+* Feel free to [learn more about Yeoman](http://yeoman.io/).
 
 ## License
 
 GPL-3.0 © [Ticean Bennett](https://reactioncommerce.com)
-
 
 [npm-image]: https://badge.fury.io/js/generator-reaction-next.svg
 [npm-url]: https://npmjs.org/package/generator-reaction-next

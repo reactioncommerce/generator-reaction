@@ -3,8 +3,9 @@ const Generator = require('yeoman-generator');
 
 module.exports = class extends Generator {
   prompting() {
-    const defaultDockerRepository = this.options.projectName
-      ? `reactioncommerce/${this.options.projectName}`
+    const { projectName } = this.options.props || {};
+    const defaultDockerRepository = projectName
+      ? `reactioncommerce/${projectName}`
       : null;
 
     const prompts = [
@@ -22,13 +23,17 @@ module.exports = class extends Generator {
     ];
 
     return this.prompt(prompts).then(props => {
-      this.props = props;
+      // We must mutate this.options.props here so that all composed generators can see
+      Object.keys(props).forEach(key => {
+        this.options.props[key] = props[key];
+      });
     });
   }
 
   writing() {
-    const [dockerNamespace, dockerName] = this.props.dockerRepository.split('/');
-    const opts = Object.assign(this.props, { dockerNamespace, dockerName });
+    const templateProps = this.options.props;
+    const [dockerNamespace, dockerName] = templateProps.dockerRepository.split('/');
+    const opts = Object.assign({}, templateProps, { dockerNamespace, dockerName });
 
     this.fs.copyTpl(
       this.templatePath('circleci/config-workflow-docker.yml'),
