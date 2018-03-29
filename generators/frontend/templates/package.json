@@ -1,0 +1,50 @@
+{
+  "name": "@reactioncommerce/<%= projectName %>",
+  "version": "<%= projectVersion %>",
+  "description": "<%= projectDescription %>",
+  "homepage": "https://github.com/reactioncommerce/<%= projectName %>",
+  "repository": "https://github.com/reactioncommerce/<%= projectName %>",
+  "author": {
+    "name": "<%= projectAuthor %>",
+    "email": "<%= projectAuthorEmail %>",
+    "url": "https://reactioncommerce.com"
+  },
+  "license": "GPL-3.0-only",
+  "private": <%= isNPMPrivate %>,
+  "scripts": {
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "lint": "yarn run lint:eslint",
+    "lint:eslint": "eslint --ignore-pattern 'dist/**/*.js' .",
+    "lint:fix": "yarn run lint:fix:eslint",
+    "lint:fix:eslint": "eslint --fix --ignore-pattern 'dist/**/*.js' .",
+    "start": "react-scripts start",
+    "test": "react-scripts test --env=jsdom"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@reactioncommerce"
+    ]
+  },
+  "eslintIgnore": ["build", "reports"],
+  "jest": {
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**/reports/**",
+      "!**/build/**",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ]
+  },
+  "babel": {
+    "plugins": [
+      "babel-plugin-styled-components"
+    ],
+    "presets": [
+      "env",
+      "stage-2",
+      "react"
+    ],
+    "sourceMaps": true
+  }
+}

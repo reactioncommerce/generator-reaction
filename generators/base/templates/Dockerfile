@@ -87,6 +87,4 @@ COPY . $APP_SOURCE_DIR
 
 RUN yarn run build
 
-EXPOSE 3000
-
-CMD ["node", "dist/index.js"]
+CMD ["yarn start"]
