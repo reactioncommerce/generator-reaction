@@ -68,8 +68,7 @@ RUN set -ex; \
     yarn install \
       --frozen-lockfile \
       --ignore-scripts \
-      --no-cache \
-      --production; \
+      --no-cache; \
   elif [ "$BUILD_ENV" = "test" ]; then \
     yarn install \
       --frozen-lockfile \
