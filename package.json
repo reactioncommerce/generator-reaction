@@ -1,5 +1,5 @@
 {
-  "name": "generator-reaction-next",
+  "name": "generator-reaction",
   "version": "0.0.0",
   "description": "Yeoman generator for Reaction NEXT JavaScript services.",
   "homepage": "https://github.com/rectioncommerce/generator-reaction-next",
