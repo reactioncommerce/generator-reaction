@@ -23,11 +23,7 @@ module.exports = class extends Generator {
   }
 
   prompting() {
-    this.log(
-      yosay(
-        'Welcome to the excellent ' + chalk.red('generator-reaction-next') + ' generator!'
-      )
-    );
+    this.log(yosay('Welcome to the excellent ' + chalk.red('reaction') + ' generator!'));
 
     const prompts = [
       {

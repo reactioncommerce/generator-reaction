@@ -1,13 +1,13 @@
-# generator-reaction-next [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+# generator-reaction [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 > &#34;Yeoman generator for Reaction NEXT JavaScript services.&#34;
 
 ## Installation
 
-First, install [Yeoman](http://yeoman.io) and generator-reaction-next using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+First, install [Yeoman](http://yeoman.io) and generator-reaction using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
 
 ```bash
 npm install -g yo
-npm install -g generator-reaction-next
+npm install -g generator-reaction
 ```
 
 ### NPM Link
@@ -24,7 +24,13 @@ npm link
 ```bash
 mkdir project-name
 cd project-name
-yo reaction-next
+yo reaction
+```
+
+## Generate GraphQL files in the main Reaction app
+
+```bash
+yo reaction:graphql
 ```
 
 ## Getting To Know Yeoman
