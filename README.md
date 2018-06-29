@@ -19,12 +19,20 @@ make the template available.
 npm link
 ```
 
-## Generate a new project
+## Generate a new frontend or backend Node project
 
 ```bash
 mkdir project-name
 cd project-name
 yo reaction
+```
+
+## Generate a new NPM package project
+
+```bash
+mkdir package-name
+cd package-name
+yo reaction:npm
 ```
 
 ## Generate GraphQL files in the main Reaction app
