@@ -2,7 +2,7 @@
   "name": "generator-reaction",
   "version": "0.0.0-development",
   "description": "Project generator for Reaction NodeJS projects. Built with Yeoman.",
-  "homepage": "https://github.com/rectioncommerce/generator-reaction",
+  "homepage": "https://github.com/reactioncommerce/generator-reaction",
   "author": {
     "name": "Reaction Commerce",
     "email": "hello@reactioncommerce.com",
