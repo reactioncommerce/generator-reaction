@@ -61,7 +61,7 @@ The `generator-reaction` package is automatically published by CI when commits a
 
 ## License
 
-GPL-3.0 © [Ticean Bennett](https://reactioncommerce.com)
+GPL-3.0 © [Reaction Commerce, Inc.](https://reactioncommerce.com)
 
 [npm-image]: https://badge.fury.io/js/generator-reaction.svg
 [npm-url]: https://npmjs.org/package/generator-reaction

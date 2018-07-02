@@ -4,8 +4,8 @@
   "description": "Project generator for Reaction NodeJS projects. Built with Yeoman.",
   "homepage": "https://github.com/rectioncommerce/generator-reaction",
   "author": {
-    "name": "Ticean Bennett",
-    "email": "ticean@reactioncommerce.com",
+    "name": "Reaction Commerce",
+    "email": "hello@reactioncommerce.com",
     "url": "https://reactioncommerce.com"
   },
   "files": [
