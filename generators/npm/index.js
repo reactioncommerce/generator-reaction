@@ -109,6 +109,11 @@ module.exports = class extends Generator {
       this.destinationPath('README.md'),
       this.templateVariables
     );
+
+    this.fs.copyTpl(
+      this.templatePath('docs/README.hbs'),
+      this.destinationPath('docs/README.hbs')
+    );
   }
 
   install() {
