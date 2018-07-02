@@ -76,7 +76,7 @@
       "prettier"
     ]
   },
-  "repository": "git@github.com:reactioncommerce/reaction.git",
+  "repository": "git@github.com:reactioncommerce/generator-reaction.git",
   "license": "GPL-3.0",
   "publishConfig": {
     "access": "public"
