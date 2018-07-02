@@ -29,7 +29,7 @@ module.exports = class extends Generator {
         type: 'input'
       },
       {
-        default: 'engineering@reactioncommerce.com',
+        default: 'hello@reactioncommerce.com',
         message: 'Author Email',
         name: 'projectAuthorEmail',
         type: 'input'
