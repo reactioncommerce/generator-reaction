@@ -82,9 +82,9 @@ module.exports = class extends Generator {
       this.destinationPath('src/main.test.js')
     );
 
-    this.fs.copyTpl(this.templatePath('.gitignore'), this.destinationPath('.gitignore'));
+    this.fs.copyTpl(this.templatePath('_gitignore'), this.destinationPath('.gitignore'));
 
-    this.fs.copyTpl(this.templatePath('.npmignore'), this.destinationPath('.npmignore'));
+    this.fs.copyTpl(this.templatePath('_npmignore'), this.destinationPath('.npmignore'));
 
     this.fs.copyTpl(
       this.templatePath('.prettierrc'),
