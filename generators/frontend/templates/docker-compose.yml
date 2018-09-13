@@ -1,9 +1,9 @@
 version: '3.4'
 
 networks:
-  graphql:
+  api:
     external:
-      name: graphql.reaction.localhost
+      name: api.reaction.localhost
 
 services:
   web:
@@ -17,7 +17,7 @@ services:
     environment:
       REACTION_APP_NAME: "<%= projectName %>.web"
     networks:
-      graphql:
+      api:
         aliases:
           - <%= projectName %>
     ports:
