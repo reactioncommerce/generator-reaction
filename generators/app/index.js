@@ -5,9 +5,9 @@ const yosay = require('yosay');
 
 module.exports = class extends Generator {
   initializing() {
-    // Pass this.props by reference to child generators so that when we
+    // Pass props by reference to child generators so that when we
     // mutate them with prompt answers, the children can see them.
-    this.props = {};
+    this.options.props = this.options.props || {};
 
     const backendGenerator = require.resolve('../backend');
     const baseGenerator = require.resolve('../base');
@@ -20,17 +20,25 @@ module.exports = class extends Generator {
     this.env.register(circleGenerator, 'reaction:circleci');
 
     // Run these generators in order.
-    this.composeWith(baseGenerator, { props: this.props });
-    this.composeWith(backendGenerator, { props: this.props });
-    this.composeWith(frontendGenerator, { props: this.props });
-    this.composeWith(docsGenerator, { props: this.props });
-    this.composeWith(circleGenerator, { props: this.props });
+    this.composeWith(baseGenerator, { props: this.options.props });
+    this.composeWith(backendGenerator, { props: this.options.props });
+    this.composeWith(frontendGenerator, { props: this.options.props });
+    this.composeWith(docsGenerator, { props: this.options.props });
+    this.composeWith(circleGenerator, { props: this.options.props });
   }
 
   prompting() {
-    this.log(yosay('Welcome to the excellent ' + chalk.red('reaction') + ' generator!'));
+    this.options.props = this.options.props || {};
 
-    const prompts = [
+    // Capture all provided option params into the props context.
+    // Allows user to define settings at the command line.
+    Object.keys(this.options).forEach(key => {
+      this.options.props[key] = this.options[key];
+    });
+
+    this.log(yosay('Welcome to the ' + chalk.red('reaction') + ' generator.'));
+
+    var prompts = [
       {
         message: 'Project Name',
         name: 'projectName',
@@ -58,9 +66,8 @@ module.exports = class extends Generator {
     ];
 
     return this.prompt(prompts).then(props => {
-      // We must mutate this.props here so that all composed generators can see
       Object.keys(props).forEach(key => {
-        this.props[key] = props[key];
+        this.options.props[key] = props[key];
       });
     });
   }
