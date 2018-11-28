@@ -19,7 +19,8 @@ module.exports = class extends Generator {
             return 'NPM package names must be in the "@reactioncommerce" scope';
           }
           return true;
-        }
+        },
+        when: () => !Object.keys(this.options.props).includes('packageName')
       }
     ]);
     Object.assign(this.templateVariables, answers);
@@ -34,7 +35,8 @@ module.exports = class extends Generator {
             return 'You must enter a package description!';
           }
           return true;
-        }
+        },
+        when: () => !Object.keys(this.options.props).includes('packageDescription')
       }
     ]);
     Object.assign(this.templateVariables, answers);
@@ -50,7 +52,8 @@ module.exports = class extends Generator {
             return 'You must enter a repository name!';
           }
           return true;
-        }
+        },
+        when: () => !Object.keys(this.options.props).includes('repoName')
       }
     ]);
     Object.assign(this.templateVariables, answers);
