@@ -9,17 +9,22 @@ module.exports = class extends Generator {
     // mutate them with prompt answers, the children can see them.
     this.props = {};
 
-    // This writes the main shared project files
-    this.composeWith(require.resolve('../base'), { props: this.props });
+    const backendGenerator = require.resolve('../backend');
+    const baseGenerator = require.resolve('../base');
+    const circleGenerator = require.resolve('../circleci');
+    const docsGenerator = require.resolve('../docs');
+    const frontendGenerator = require.resolve('../frontend');
 
-    // Only frontend or backend will run. They check the `projectType` to determine
-    // whether they should do anything.
-    this.composeWith(require.resolve('../frontend'), { props: this.props });
-    this.composeWith(require.resolve('../backend'), { props: this.props });
+    // Register sub generators as individual tasks.
+    this.env.register(docsGenerator, 'reaction:docs');
+    this.env.register(circleGenerator, 'reaction:circleci');
 
-    // These run for all project types
-    this.composeWith(require.resolve('../docs'), { props: this.props });
-    this.composeWith(require.resolve('../circleci'), { props: this.props });
+    // Run these generators in order.
+    this.composeWith(baseGenerator, { props: this.props });
+    this.composeWith(backendGenerator, { props: this.props });
+    this.composeWith(frontendGenerator, { props: this.props });
+    this.composeWith(docsGenerator, { props: this.props });
+    this.composeWith(circleGenerator, { props: this.props });
   }
 
   prompting() {
@@ -35,7 +40,8 @@ module.exports = class extends Generator {
             return 'Project name is required!';
           if (value.indexOf(' ') > -1) return 'No spaces allowed!';
           return true;
-        }
+        },
+        when: () => !Object.keys(this.options.props).includes('projectName')
       },
       {
         choices: ['frontend', 'backend'],
@@ -46,7 +52,8 @@ module.exports = class extends Generator {
           if (typeof value !== 'string' || value.length === 0)
             return 'You must choose a project type!';
           return true;
-        }
+        },
+        when: () => !Object.keys(this.options.props).includes('projectType')
       }
     ];
 

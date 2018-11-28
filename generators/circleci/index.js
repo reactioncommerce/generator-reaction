@@ -3,7 +3,9 @@ const Generator = require('yeoman-generator');
 
 module.exports = class extends Generator {
   prompting() {
-    const { projectName } = this.options.props || {};
+    this.options.props = this.options.props || {};
+
+    const { projectName } = this.options.props;
     const defaultDockerRepository = projectName
       ? `reactioncommerce/${projectName}`
       : null;
@@ -13,17 +15,19 @@ module.exports = class extends Generator {
         default: defaultDockerRepository,
         message: 'Docker repository.',
         name: 'dockerRepository',
-        type: 'input'
+        type: 'input',
+        when: () => !Object.keys(this.options.props).includes('dockerRepository')
       },
       {
         message: 'Is Docker repo private?',
         name: 'isDockerPrivate',
-        type: 'confirm'
+        type: 'confirm',
+        when: () => !Object.keys(this.options.props).includes('isDockerPrivate')
       }
     ];
 
     return this.prompt(prompts).then(props => {
-      // We must mutate this.options.props here so that all composed generators can see
+      // Mutate this.options.props to share with composed generators.
       Object.keys(props).forEach(key => {
         this.options.props[key] = props[key];
       });

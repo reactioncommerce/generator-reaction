@@ -5,39 +5,71 @@ const rimraf = require('rimraf');
 
 module.exports = class extends Generator {
   prompting() {
-    const prompts = [
+    this.options.props = this.options.props || {};
+
+    var prompts = [
+      {
+        message: 'Project Name',
+        name: 'projectName',
+        type: 'input',
+        validate(value) {
+          if (typeof value !== 'string' || value.length === 0)
+            return 'Project name is required!';
+          if (value.indexOf(' ') > -1) return 'No spaces allowed!';
+          return true;
+        },
+        when: () => !Object.keys(this.options.props).includes('projectName')
+      },
+      {
+        choices: ['frontend', 'backend'],
+        message: 'Project Type',
+        name: 'projectType',
+        type: 'list',
+        validate(value) {
+          if (typeof value !== 'string' || value.length === 0)
+            return 'You must choose a project type!';
+          return true;
+        },
+        when: () => !Object.keys(this.options.props).includes('projectType')
+      },
       {
         default: '0.1.0',
         message: 'Version',
         name: 'projectVersion',
-        type: 'input'
+        type: 'input',
+        when: () => !Object.keys(this.options.props).includes('projectVersion')
       },
       {
         message: 'Description',
         name: 'projectDescription',
-        type: 'input'
+        type: 'input',
+        when: () => !Object.keys(this.options.props).includes('projectDescription')
       },
       {
         message: 'Keywords',
         name: 'projectKeywords',
-        type: 'input'
+        type: 'input',
+        when: () => !Object.keys(this.options.props).includes('projectKeywords')
       },
       {
         default: 'Reaction Commerce',
         message: 'Author',
         name: 'projectAuthor',
-        type: 'input'
+        type: 'input',
+        when: () => !Object.keys(this.options.props).includes('projectAuthor')
       },
       {
         default: 'hello@reactioncommerce.com',
         message: 'Author Email',
         name: 'projectAuthorEmail',
-        type: 'input'
+        type: 'input',
+        when: () => !Object.keys(this.options.props).includes('projectAuthorEmail')
       },
       {
         message: 'Keep NPM repository private?',
         name: 'isNPMPrivate',
-        type: 'confirm'
+        type: 'confirm',
+        when: () => !Object.keys(this.options.props).includes('isNPMPrivate')
       }
     ];
 
