@@ -38,5 +38,5 @@ for module in ${custom_modules}; do
   yarn --modules-folder "${modules_folder}" link
   cd "${project_folder}" \
     || ( echo "Project directory doesn't exist while NPM module linking!" 2>&1 && exit 1 )
-  yarn --modules-folder "${modules_folder}" link ${module}
+  yarn --modules-folder "${modules_folder}" link "${module}"
 done
