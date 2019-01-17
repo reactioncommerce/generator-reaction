@@ -1,6 +1,20 @@
-
 version: 2
 jobs:
+  lint-shell-scripts:
+    docker:
+      - image: docker:18.09-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Lint Shell Scripts
+          command: |
+            find generators -path '*/bin/*' | {
+              while IFS= read -r file_path; do
+                echo "shellcheck ${file_path}"
+                docker run --rm --interactive koalaman/shellcheck:v0.6.0 -x /dev/stdin < "${file_path}"
+              done
+            }
   build:
     docker:
       - image: node:8
@@ -17,7 +31,6 @@ jobs:
       - run: npm install
       - run: npm run lint
       - run: npm run test
-
       - save_cache:
           paths:
             - node_modules
@@ -39,6 +52,8 @@ workflows:
     jobs:
       - build:
           context: reaction-publish-semantic-release
+          requires:
+            - lint-shell-scripts
       - deploy:
           context: reaction-publish-semantic-release
           requires:
@@ -46,3 +61,4 @@ workflows:
           filters:
             branches:
               only: master
+      - lint-shell-scripts
