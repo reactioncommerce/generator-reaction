@@ -17,16 +17,18 @@ function add_new_env_vars() {
     chmod 0600 "${env_file}"
   }
 
-  while IFS= read -r var; do
-    key="${var%%=*}"        # get var key
-    var=$(eval echo "$var") # generate dynamic values
+  grep -Ev '^\s*#' "${env_example_file}" | {
+    while IFS= read -r var; do
+      key="${var%%=*}"        # get var key
+      var=$(eval echo "$var") # generate dynamic values
 
-    # If .env doesn't contain this env key, add it
-    if ! grep -qLE "^$key=" "${env_file}"; then
-      echo "Adding $key to .env"
-      echo "$var" >>"${env_file}"
-    fi
-  done <"${env_example_file}"
+      # If .env doesn't contain this env key, add it
+      if ! grep -qLE "^$key=" "${env_file}"; then
+        echo "Adding $key to .env"
+        echo "$var" >>"${env_file}"
+      fi
+    done
+  }
 }
 
 main
