@@ -5,27 +5,40 @@ const yosay = require('yosay');
 
 module.exports = class extends Generator {
   initializing() {
-    // Pass this.props by reference to child generators so that when we
+    // Pass props by reference to child generators so that when we
     // mutate them with prompt answers, the children can see them.
-    this.props = {};
+    this.options.props = this.options.props || {};
 
-    // This writes the main shared project files
-    this.composeWith(require.resolve('../base'), { props: this.props });
+    const backendGenerator = require.resolve('../backend');
+    const baseGenerator = require.resolve('../base');
+    const circleGenerator = require.resolve('../circleci');
+    const docsGenerator = require.resolve('../docs');
+    const frontendGenerator = require.resolve('../frontend');
 
-    // Only frontend or backend will run. They check the `projectType` to determine
-    // whether they should do anything.
-    this.composeWith(require.resolve('../frontend'), { props: this.props });
-    this.composeWith(require.resolve('../backend'), { props: this.props });
+    // Register sub generators as individual tasks.
+    this.env.register(docsGenerator, 'reaction:docs');
+    this.env.register(circleGenerator, 'reaction:circleci');
 
-    // These run for all project types
-    this.composeWith(require.resolve('../docs'), { props: this.props });
-    this.composeWith(require.resolve('../circleci'), { props: this.props });
+    // Run these generators in order.
+    this.composeWith(baseGenerator, { props: this.options.props });
+    this.composeWith(backendGenerator, { props: this.options.props });
+    this.composeWith(frontendGenerator, { props: this.options.props });
+    this.composeWith(docsGenerator, { props: this.options.props });
+    this.composeWith(circleGenerator, { props: this.options.props });
   }
 
   prompting() {
-    this.log(yosay('Welcome to the excellent ' + chalk.red('reaction') + ' generator!'));
+    this.options.props = this.options.props || {};
 
-    const prompts = [
+    // Capture all provided option params into the props context.
+    // Allows user to define settings at the command line.
+    Object.keys(this.options).forEach(key => {
+      this.options.props[key] = this.options[key];
+    });
+
+    this.log(yosay('Welcome to the ' + chalk.red('reaction') + ' generator.'));
+
+    var prompts = [
       {
         message: 'Project Name',
         name: 'projectName',
@@ -35,7 +48,8 @@ module.exports = class extends Generator {
             return 'Project name is required!';
           if (value.indexOf(' ') > -1) return 'No spaces allowed!';
           return true;
-        }
+        },
+        when: () => !Object.keys(this.options.props).includes('projectName')
       },
       {
         choices: ['frontend', 'backend'],
@@ -46,14 +60,14 @@ module.exports = class extends Generator {
           if (typeof value !== 'string' || value.length === 0)
             return 'You must choose a project type!';
           return true;
-        }
+        },
+        when: () => !Object.keys(this.options.props).includes('projectType')
       }
     ];
 
     return this.prompt(prompts).then(props => {
-      // We must mutate this.props here so that all composed generators can see
       Object.keys(props).forEach(key => {
-        this.props[key] = props[key];
+        this.options.props[key] = props[key];
       });
     });
   }
