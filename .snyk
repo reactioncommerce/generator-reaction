@@ -1,0 +1,17 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.13.5
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-JS-TAR-174125:
+    - indexr > chokidar > fsevents > node-pre-gyp > tar:
+        reason: no updates available at this time
+        expires: '2019-10-24T15:09:45.856Z'
+  'npm:braces:20180219':
+    - indexr > chokidar > anymatch > micromatch > braces:
+        reason: no upgrade path for this module
+        expires: '2019-10-24T15:09:45.856Z'
+  'npm:chownr:20180731':
+    - indexr > chokidar > fsevents > node-pre-gyp > tar > chownr:
+        reason: no upgrade path available at this time
+        expires: '2019-10-24T15:09:45.856Z'
+patch: {}
