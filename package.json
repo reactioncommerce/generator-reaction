@@ -36,7 +36,6 @@
     "fs-extra": "6.0.1",
     "indexr": "^1.1.10",
     "rimraf": "2.6.2",
-    "snyk": "^1.228.5",
     "yeoman-generator": "^2.0.5",
     "yosay": "2.0.2"
   },
@@ -46,8 +45,7 @@
   "scripts": {
     "build": "echo 'No build needed!'",
     "lint": "eslint .",
-    "precommit": "lint-staged",
-    "test": "echo 'No tests!'"
+    "precommit": "lint-staged"
   },
   "lint-staged": {
     "*.js": [
