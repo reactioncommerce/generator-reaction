@@ -74,6 +74,7 @@ module.exports = class extends Generator {
       }
     ]);
 
+    // eslint-disable-next-line no-warning-comments
     // TODO maybe check to make sure it's in the GraphQL schema?
 
     Object.assign(this.answers, answers);
@@ -203,42 +204,22 @@ module.exports = class extends Generator {
 
   end() {
     if (this.answers.type === GenTypes.QUERY) {
-      const pluginQueriesImport = `import ${
-        this.answers.plugin
-      } from "/imports/plugins/core/${this.answers.plugin}/server/no-meteor/queries";`;
+      const pluginQueriesImport = `import ${this.answers.plugin} from "/imports/plugins/core/${this.answers.plugin}/server/no-meteor/queries";`;
       this.log(`
 I've generated some files for you, but you'll have to do a few things yourself:
 
-* If this is the first query for the plugin, add the line '${pluginQueriesImport}' in /imports/plugins/core/graphql/server/no-meteor/queries.js, and add ${
-        this.answers.plugin
-      } to the default export object.
-* If this is the first ${
-        this.answers.plugin
-      } query resolver, add 'import Query from "./Query"' in /imports/plugins/core/graphql/server/no-meteor/resolvers/${
-        this.answers.plugin
-      }/index.js, and add Query to the default export object.
-* If the entire /imports/plugins/core/graphql/server/no-meteor/resolvers/${
-        this.answers.plugin
-      } folder is new, import it and add it to the 'merge' call in /imports/plugins/core/graphql/server/no-meteor/resolvers/index.js
+* If this is the first query for the plugin, add the line '${pluginQueriesImport}' in /imports/plugins/core/graphql/server/no-meteor/queries.js, and add ${this.answers.plugin} to the default export object.
+* If this is the first ${this.answers.plugin} query resolver, add 'import Query from "./Query"' in /imports/plugins/core/graphql/server/no-meteor/resolvers/${this.answers.plugin}/index.js, and add Query to the default export object.
+* If the entire /imports/plugins/core/graphql/server/no-meteor/resolvers/${this.answers.plugin} folder is new, import it and add it to the 'merge' call in /imports/plugins/core/graphql/server/no-meteor/resolvers/index.js
 `);
     } else {
-      const pluginMutationsImport = `import ${
-        this.answers.plugin
-      } from "/imports/plugins/core/${this.answers.plugin}/server/no-meteor/mutations";`;
+      const pluginMutationsImport = `import ${this.answers.plugin} from "/imports/plugins/core/${this.answers.plugin}/server/no-meteor/mutations";`;
       this.log(`
 I've generated some files for you, but you'll have to do a few things yourself:
 
-* If this is the first query for the plugin, add the line '${pluginMutationsImport}' in /imports/plugins/core/graphql/server/no-meteor/mutations.js, and add ${
-        this.answers.plugin
-      } to the default export object.
-* If this is the first ${
-        this.answers.plugin
-      } mutation resolver, add 'import Mutation from "./Mutation"' in /imports/plugins/core/graphql/server/no-meteor/resolvers/${
-        this.answers.plugin
-      }/index.js, and add Mutation to the default export object.
-* If the entire /imports/plugins/core/graphql/server/no-meteor/resolvers/${
-        this.answers.plugin
-      } folder is new, import it and add it to the 'merge' call in /imports/plugins/core/graphql/server/no-meteor/resolvers/index.js
+* If this is the first query for the plugin, add the line '${pluginMutationsImport}' in /imports/plugins/core/graphql/server/no-meteor/mutations.js, and add ${this.answers.plugin} to the default export object.
+* If this is the first ${this.answers.plugin} mutation resolver, add 'import Mutation from "./Mutation"' in /imports/plugins/core/graphql/server/no-meteor/resolvers/${this.answers.plugin}/index.js, and add Mutation to the default export object.
+* If the entire /imports/plugins/core/graphql/server/no-meteor/resolvers/${this.answers.plugin} folder is new, import it and add it to the 'merge' call in /imports/plugins/core/graphql/server/no-meteor/resolvers/index.js
 `);
     }
   }
