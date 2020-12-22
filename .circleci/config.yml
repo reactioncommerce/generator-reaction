@@ -38,7 +38,7 @@ jobs:
 
   deploy:
     docker:
-      - image: node:8
+      - image: node:14.15.0
 
     steps:
       - checkout
